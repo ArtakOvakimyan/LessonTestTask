@@ -6,33 +6,47 @@ import org.junit.Test;
 
 public class BotTest {
     @Test
-    public void testCommandTest() throws InterruptedException {
+    public void testCommandTest() {
         FakeBot bot = new FakeBot();
         BotLogic botLogic = new BotLogic(bot);
         User user = new User(111L);
 
         botLogic.processCommand(user, "/test");
-        Thread.sleep(1010);
-        //Assert.assertEquals(user.getState(), State.TEST);
 
         Assert.assertEquals("Вычислите степень: 10^2", bot.getMessages().get(0));
         botLogic.processCommand(user, "100");
-        Thread.sleep(1010);
         Assert.assertEquals("Правильный ответ!", bot.getMessages().get(1));
         Assert.assertEquals("Сколько будет 2 + 2 * 2", bot.getMessages().get(2));
         botLogic.processCommand(user, "6");
-        Thread.sleep(1010);
         Assert.assertEquals("Правильный ответ!", bot.getMessages().get(3));
 
         Assert.assertEquals("Тест завершен", bot.getMessages().get(4));
 
     }
     @Test
-    public void notifyCommandTest(){
+    public void notifyCommandTest() throws InterruptedException {
+        FakeBot bot = new FakeBot();
+        BotLogic botLogic = new BotLogic(bot);
+        User user = new User(111L);
 
+        botLogic.processCommand(user, "/notify");
+
+        Assert.assertEquals("Введите текст напоминания", bot.getMessages().get(0));
+        botLogic.processCommand(user, "Первое напоминание");
+        Assert.assertEquals("Через сколько секунд напомнить?", bot.getMessages().get(1));
+        botLogic.processCommand(user, "5");
+        Assert.assertEquals("Напоминание установлено", bot.getMessages().get(2));
+        Assert.assertEquals(3, bot.getMessages().size());
+
+        Thread.sleep(5100);
+        Assert.assertEquals("Сработало напоминание: 'Первое напоминание'", bot.getMessages().get(3));
     }
     @Test
     public void repeatCommandTest(){
+        FakeBot bot = new FakeBot();
+        BotLogic botLogic = new BotLogic(bot);
+        User user = new User(111L);
 
+        botLogic.processCommand(user, "/repeat");
     }
 }
